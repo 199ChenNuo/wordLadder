@@ -3,13 +3,16 @@ package test;
 import org.junit.Test; 
 import org.junit.Before; 
 import org.junit.After;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+import sun.java2d.opengl.WGLSurfaceData;
+
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.Stack;
 
 /** 
 * WordLadder Tester. 
@@ -18,30 +21,32 @@ import java.util.Set;
 * @since <pre>���� 10, 2018</pre> 
 * @version 1.0 
 */ 
-public class WordLadderTest { 
-   static WordLadder wl;
+public class WordLadderTest {
+
 @Before
 public void before() throws Exception {
+   testMain();
+   System.out.println("before");
 } 
 
 @After
 public void after() throws Exception {
-   System.out.println(WordLadder.w1);
-   System.out.println(WordLadder.w2);
-   Set<String> dic = WordLadder.dic;
-   Scanner sc = WordLadder.sc;
 } 
 
 /** 
 * 
 * Method: main(String[] args) 
-* 
+*
 */ 
 @Test
-public void testMain() throws Exception { 
+public void testMain() throws Exception {
 //TODO: Test goes here...
-   wl = new WordLadder();
-} 
+   testPrintLadder();
+   testGetKeyWords();
+   testGetLadder();
+   testGetNeighbor();
+   testGetWords();
+}
 
 /** 
 * 
@@ -51,18 +56,15 @@ public void testMain() throws Exception {
 @Test
 public void testGetKeyWords() throws Exception { 
 //TODO: Test goes here...
-   String data =  ".\\src\\dictionary.txt";
-   String input;
-   InputStream stdin = System.in;
-   try{
-      System.setIn(new ByteArrayInputStream(data.getBytes()));
-      WordLadder.getKeyWords();
-   }finally {
-      System.setIn(stdin);
-   }
+    WordLadder wl = new WordLadder();
+   String data =  ".\\src\\main\\java\\test\\dictionary.txt\n";
+   ByteArrayInputStream in = null;
+   in = new ByteArrayInputStream(data.getBytes());
+   System.setIn(in);
+   assertEquals(data, wl.getKeyWords());
 } 
 
-/** 
+/**
 * 
 * Method: getWords() 
 * 
@@ -70,7 +72,12 @@ public void testGetKeyWords() throws Exception {
 @Test
 public void testGetWords() throws Exception { 
 //TODO: Test goes here...
-
+    WordLadder wl = new WordLadder();
+    String word = "bee\nbug\n";
+    ByteArrayInputStream in = null;
+    in = new ByteArrayInputStream(word.getBytes());
+    System.setIn(in);
+    wl.getWords();
 } 
 
 /** 
@@ -80,7 +87,9 @@ public void testGetWords() throws Exception {
 */ 
 @Test
 public void testGetLadder() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here..
+    WordLadder wl = new WordLadder();
+    assertEquals(true, wl.getLadder());
 } 
 
 /** 
@@ -90,7 +99,11 @@ public void testGetLadder() throws Exception {
 */ 
 @Test
 public void testGetNeighbor() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here...
+    WordLadder wl = new WordLadder();
+    String str = "bee";
+    Set<String> neighbor = wl.getNeighbor(str);
+    assertEquals(true, (!neighbor.contains(str)) && (neighbor.contains("beg")));
 } 
 
 /** 
@@ -101,7 +114,14 @@ public void testGetNeighbor() throws Exception {
 @Test
 public void testPrintLadder() throws Exception { 
 //TODO: Test goes here...
-  // assert("this", WordLadder().printLadder((Stack<String>)"this");
+   WordLadder wl = new WordLadder();
+   Stack<String> stack = new Stack<String>();
+   stack.push("1");
+   stack.push("2");
+   stack.push("3");
+
+   assertEquals(true, wl.printLadder(stack));
+
 } 
 
 

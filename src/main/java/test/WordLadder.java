@@ -8,18 +8,19 @@ import java.util.*;
 
 public class WordLadder {
     static Set<String> dic =new HashSet<String>();// contains all words from ..txt file
-    static Scanner sc = new Scanner(System.in);
     static String w1=null;
     static String w2=null;
     public static void main(String[] args){
-        getKeyWords();
-        System.out.println("Hava a nice day.");
+        WordLadder wl = new WordLadder();
+        wl.getKeyWords();
+        System.out.println("Have a nice day.");
     }
 
     // initial dic and call fun to get word1, word2
-    public static String getKeyWords(){
-        System.out.println("Dictionary file name?");
-        String dicName = sc.nextLine();
+    public String getKeyWords(){
+        System.out.print("Dictionary file name?\n");
+        Scanner sc1 = new Scanner(System.in);
+        String dicName = sc1.nextLine();
         try{
             File dicFile = new File(dicName);
             InputStreamReader reader = new InputStreamReader(new FileInputStream(dicName));
@@ -44,18 +45,24 @@ public class WordLadder {
     }
 
     // get word1, word2(and check them), then call fun to find word ladder
-    public static boolean getWords(){
+    public boolean getWords(){
+        Scanner sc2 = new Scanner(System.in);
         System.out.println("Word #1 (or Enter to quit): ");
         char temp;
-        w1 = sc.nextLine();
+        System.out.println("52 ");
+        w1 = sc2.nextLine();
+        System.out.println("w1" + w1 + " size " + w1.length());
         if(w1.length() == 0)// input 'Enter'
+        {
+            System.out.println("w1" + w1 + " size " + w1.length());
             return false;
+        }
         if(!dic.contains(w1)){// invalid word1
             System.out.println("The two words must be in the dictionary.");
             return true;
         }
         System.out.println("Word #2 (or Enter to quit): ");
-        w2 = sc.nextLine();
+        w2 = sc2.nextLine();
         if(w2.length() == 0)
             return false;
         if(!dic.contains(w2)){
@@ -72,7 +79,7 @@ public class WordLadder {
         return true;
     }
 
-    public static void getLadder(){
+    public boolean getLadder(){
         Set<String> usedWords=new HashSet<String>();// words that were used
         Queue<Stack<String>> tree=new LinkedList<Stack<String>>();
         Stack<String> firstStack=new Stack<String>();
@@ -88,7 +95,7 @@ public class WordLadder {
             if(neighbors.contains(w2)){// two words differ by one letter
                 topStack.push(w2);
                 printLadder(topStack);
-                return;
+                return true;
             }
             for(String neigh : neighbors){// for each String in neighbors
                 if(!(usedWords.contains(neigh))){// if the word has been used, then it won't lead to the shortest path
@@ -96,7 +103,7 @@ public class WordLadder {
                         topStack.push(neigh);
                         topStack.push(w2);
                         printLadder(topStack);
-                        return;
+                        return true;
                     }else{
                         Stack<String> newStack = (Stack<String>) topStack.clone();
                         newStack.push(neigh);
@@ -107,10 +114,11 @@ public class WordLadder {
             }
         }
         System.out.println("No word ladder found from " + w1 + " back to " + w2);
+        return true;
     }
 
     // find all valid neighbors of w, and return them in a Set<String>
-    public static Set<String> getNeighbor(String w){
+    public Set<String> getNeighbor(String w){
         Set<String> neighbors = new HashSet<String>();
         int len = w.length();
         for(int i = 0; i < len; i++){
@@ -133,11 +141,12 @@ public class WordLadder {
     }
 
     // print the ladder
-    public static void printLadder(Stack<String> stack){
+    public boolean printLadder(Stack<String> stack){
         int len = stack.size();
         for(int i = 0; i < len - 1; i++){
-            System.out.print(stack.pop() + " -> ");
+            System.out.print(i + ":" + stack.pop() + " -> ");
         }
-        System.out.println(stack.pop());
+        System.out.println(len -1 + ":" + stack.pop());
+        return true;
     }
 }
