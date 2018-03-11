@@ -49,14 +49,9 @@ public class WordLadder {
         Scanner sc2 = new Scanner(System.in);
         System.out.println("Word #1 (or Enter to quit): ");
         char temp;
-        System.out.println("52 ");
         w1 = sc2.nextLine();
-        System.out.println("w1" + w1 + " size " + w1.length());
         if(w1.length() == 0)// input 'Enter'
-        {
-            System.out.println("w1" + w1 + " size " + w1.length());
             return false;
-        }
         if(!dic.contains(w1)){// invalid word1
             System.out.println("The two words must be in the dictionary.");
             return true;
