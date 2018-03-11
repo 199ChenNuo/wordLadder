@@ -8,18 +8,24 @@ import java.util.*;
 
 public class WordLadder {
     public static void main(String[] args){
+        Set<String> dic = new HashSet<String>();
         WordLadder wl = new WordLadder();
-        wl.getKeyWords();
+        wl.getKeyWords(dic);
+        boolean flag = true;
+        while (flag){
+            flag = wl.getWords(dic);
+            if(flag == false)
+                break;;
+        }
         System.out.println("Have a nice day.");
     }
 
     // initial dic and call fun to get word1, word2
-    public String getKeyWords(){
-        Set<String> dic =new HashSet<String>();// contains all words from ..txt file
-
-        System.out.print("Dictionary file name?\n");
+    public String getKeyWords(Set<String> dic){
+        //System.out.print("Dictionary file name?\n");
         Scanner sc1 = new Scanner(System.in);
-        String dicName = sc1.nextLine();
+        //String dicName = sc1.nextLine();
+        String dicName = ".\\src\\main\\java\\test\\dictionary.txt";
         try{
             File dicFile = new File(dicName);
             InputStreamReader reader = new InputStreamReader(new FileInputStream(dicName));
@@ -34,12 +40,6 @@ public class WordLadder {
         }catch (Exception e){
             e.printStackTrace();
         }
-        boolean flag = true;
-        while (flag){
-            flag = getWords(dic);
-            if(flag == false)
-                break;;
-        }
         return dicName;
     }
 
@@ -53,7 +53,7 @@ public class WordLadder {
         if(w1.length() == 0)// input 'Enter'
             return false;
         if(!dic.contains(w1)){// invalid word1
-            System.out.println("The two words must be in the dictionary.");
+            System.out.println(w1 + " is not in the dictionary.");
             return true;
         }
         System.out.println("Word #2 (or Enter to quit): ");
@@ -61,7 +61,7 @@ public class WordLadder {
         if(w2.length() == 0)
             return false;
         if(!dic.contains(w2)){
-            System.out.println("The two words must be in the dictionary.");
+            System.out.println(w2 + " is not in the dictionary.");
             return true;
         }
         if(w1.equals(w2)){
@@ -139,9 +139,9 @@ public class WordLadder {
     public boolean printLadder(Stack<String> stack){
         int len = stack.size();
         for(int i = 0; i < len - 1; i++){
-            System.out.print(i+1 + ":" + stack.pop() + " -> ");
+            System.out.print(stack.pop() + " -> ");
         }
-        System.out.println(len + ":" + stack.pop());
+        System.out.println( stack.pop());
         return true;
     }
 }

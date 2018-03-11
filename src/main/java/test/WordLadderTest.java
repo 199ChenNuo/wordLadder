@@ -40,7 +40,11 @@ public void after() throws Exception {
 @Test
 public void testMain() throws Exception {
 //TODO: Test goes here...
-   WordLadder wl = new WordLadder();
+    WordLadder wl = new WordLadder();
+    String data =  "apple\n\n";
+    ByteArrayInputStream in = null;
+    in = new ByteArrayInputStream(data.getBytes());
+    System.setIn(in);
    wl.main(null);
 }
 
@@ -52,12 +56,13 @@ public void testMain() throws Exception {
 @Test
 public void testGetKeyWords() throws Exception { 
 //TODO: Test goes here...
-    WordLadder wl = new WordLadder();
-   String data =  ".\\src\\main\\java\\test\\dictionary.txt\nbee\nbug\n";
+   WordLadder wl = new WordLadder();
+   Set<String> dic = new HashSet<String>();
+   String data =  "apple\nkeep\n";//error, lack '.txt'
    ByteArrayInputStream in = null;
    in = new ByteArrayInputStream(data.getBytes());
    System.setIn(in);
-   assertEquals(data, wl.getKeyWords());
+   assertEquals(".\\src\\main\\java\\test\\dictionary.txt", wl.getKeyWords(dic));
 } 
 
 /**
@@ -68,6 +73,7 @@ public void testGetKeyWords() throws Exception {
 @Test
 public void testGetWords() throws Exception { 
 //TODO: Test goes here...
+    // initial
     WordLadder wl = new WordLadder();
     Set<String> dic = new HashSet<String>();
     File dicFile = new File(".\\src\\main\\java\\test\\dictionary.txt");
@@ -80,11 +86,62 @@ public void testGetWords() throws Exception {
         dic.add(line);
     }
     br.close();
+    // normal
+    System.out.println("testGetWords() normal case:");
     String word = "bee\nbug\n";
     ByteArrayInputStream in = null;
     in = new ByteArrayInputStream(word.getBytes());
     System.setIn(in);
-    wl.getWords(dic);
+    assertEquals(true, wl.getWords(dic));
+
+    // word1 is ENTER
+    System.out.println("\ntestGetWords() word1 == 'ENTER' exit");
+    word = "\n";
+    in = new ByteArrayInputStream(word.getBytes());
+    System.setIn(in);
+    assertEquals(false, wl.getWords(dic));
+
+    //word2 is ENTER
+    System.out.println("\ntestGetWords() word2 == 'ENTER' exit");
+    word = "apple\n\n";
+    in = new ByteArrayInputStream(word.getBytes());
+    System.setIn(in);
+    assertEquals(false, wl.getWords(dic));
+
+    // word1 is invalid
+    System.out.println("\ntestGetWords() word1 invalid");
+    word = "aaaaaaaa\n";
+    in = new ByteArrayInputStream(word.getBytes());
+    System.setIn(in);
+    assertEquals(true, wl.getWords(dic));
+
+    // word2 is invalid
+    System.out.println("\ntestGetWords() word1 invalid");
+    word = "apple\naaaaaaaa\n";
+    in = new ByteArrayInputStream(word.getBytes());
+    System.setIn(in);
+    assertEquals(true, wl.getWords(dic));
+
+    // word1 == word2
+    System.out.println("\ntestGetWords() word1 equals word2");
+    word = "apple\napple\n";
+    in = new ByteArrayInputStream(word.getBytes());
+    System.setIn(in);
+    assertEquals(true, wl.getWords(dic));
+
+    // word1 and word2 differ by one letter
+    System.out.println("\ntestGetWords() word1 differs word2 by one letter");
+    word = "beg\nbee\n";
+    in = new ByteArrayInputStream(word.getBytes());
+    System.setIn(in);
+    assertEquals(true, wl.getWords(dic));
+
+    // no word ladder
+    System.out.println("\nno word ladder");
+    word = "programmer\ngirlfriend\n";
+    in = new ByteArrayInputStream(word.getBytes());
+    System.setIn(in);
+    assertEquals(true, wl.getWords(dic));
 }
 
 
@@ -145,15 +202,7 @@ public void testGetNeighbor() throws Exception {
 @Test
 public void testPrintLadder() throws Exception { 
 //TODO: Test goes here...
-   WordLadder wl = new WordLadder();
-   Stack<String> stack = new Stack<String>();
-   stack.push("bottom");
-   stack.push("middle");
-   stack.push("top");
-
-   assertEquals(true, wl.printLadder(stack));
-
-} 
+}
 
 
 } 
