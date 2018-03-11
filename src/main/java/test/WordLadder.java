@@ -7,9 +7,6 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class WordLadder {
-    static Set<String> dic =new HashSet<String>();// contains all words from ..txt file
-    static String w1=null;
-    static String w2=null;
     public static void main(String[] args){
         WordLadder wl = new WordLadder();
         wl.getKeyWords();
@@ -18,6 +15,8 @@ public class WordLadder {
 
     // initial dic and call fun to get word1, word2
     public String getKeyWords(){
+        Set<String> dic =new HashSet<String>();// contains all words from ..txt file
+
         System.out.print("Dictionary file name?\n");
         Scanner sc1 = new Scanner(System.in);
         String dicName = sc1.nextLine();
@@ -37,7 +36,7 @@ public class WordLadder {
         }
         boolean flag = true;
         while (flag){
-            flag = getWords();
+            flag = getWords(dic);
             if(flag == false)
                 break;;
         }
@@ -45,10 +44,11 @@ public class WordLadder {
     }
 
     // get word1, word2(and check them), then call fun to find word ladder
-    public boolean getWords(){
+    public boolean getWords(Set<String> dic){
+        String w1 = null;
+        String w2 = null;
         Scanner sc2 = new Scanner(System.in);
         System.out.println("Word #1 (or Enter to quit): ");
-        char temp;
         w1 = sc2.nextLine();
         if(w1.length() == 0)// input 'Enter'
             return false;
@@ -70,23 +70,23 @@ public class WordLadder {
         }
         w1.toLowerCase();
         w2.toLowerCase();
-        getLadder();
+        getLadder(w1, w2, dic);
         return true;
     }
 
-    public boolean getLadder(){
+    public boolean getLadder(String w1, String w2, Set<String> dic){
         Set<String> usedWords=new HashSet<String>();// words that were used
         Queue<Stack<String>> tree=new LinkedList<Stack<String>>();
         Stack<String> firstStack=new Stack<String>();
         Set<String> neighbors=new HashSet<String>();
         Set<String> w2Neighbors=new HashSet<String>();
-        w2Neighbors = getNeighbor(w2);
+        w2Neighbors = getNeighbor(w2, dic);
         firstStack.push(w1);
         tree.offer(firstStack);
         while(tree.size() != 0){
             Stack<String> topStack = tree.poll();// get and delete topStack
             String topWord = topStack.peek();// get NOT delete topWord
-            neighbors = getNeighbor(topWord);
+            neighbors = getNeighbor(topWord, dic);
             if(neighbors.contains(w2)){// two words differ by one letter
                 topStack.push(w2);
                 printLadder(topStack);
@@ -109,11 +109,11 @@ public class WordLadder {
             }
         }
         System.out.println("No word ladder found from " + w1 + " back to " + w2);
-        return true;
+        return false;
     }
 
     // find all valid neighbors of w, and return them in a Set<String>
-    public Set<String> getNeighbor(String w){
+    public Set<String> getNeighbor(String w, Set<String> dic){
         Set<String> neighbors = new HashSet<String>();
         int len = w.length();
         for(int i = 0; i < len; i++){
@@ -139,9 +139,9 @@ public class WordLadder {
     public boolean printLadder(Stack<String> stack){
         int len = stack.size();
         for(int i = 0; i < len - 1; i++){
-            System.out.print(i + ":" + stack.pop() + " -> ");
+            System.out.print(i+1 + ":" + stack.pop() + " -> ");
         }
-        System.out.println(len -1 + ":" + stack.pop());
+        System.out.println(len + ":" + stack.pop());
         return true;
     }
 }

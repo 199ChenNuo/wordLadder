@@ -7,8 +7,7 @@ import sun.java2d.opengl.WGLSurfaceData;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -25,8 +24,8 @@ public class WordLadderTest {
 
 @Before
 public void before() throws Exception {
-   testMain();
-   System.out.println("before");
+   //testMain();
+   //System.out.println("before");
 } 
 
 @After
@@ -41,11 +40,8 @@ public void after() throws Exception {
 @Test
 public void testMain() throws Exception {
 //TODO: Test goes here...
-   testPrintLadder();
-   testGetKeyWords();
-   testGetLadder();
-   testGetNeighbor();
-   testGetWords();
+   WordLadder wl = new WordLadder();
+   wl.main(null);
 }
 
 /** 
@@ -57,7 +53,7 @@ public void testMain() throws Exception {
 public void testGetKeyWords() throws Exception { 
 //TODO: Test goes here...
     WordLadder wl = new WordLadder();
-   String data =  ".\\src\\main\\java\\test\\dictionary.txt\n";
+   String data =  ".\\src\\main\\java\\test\\dictionary.txt\nbee\nbug\n";
    ByteArrayInputStream in = null;
    in = new ByteArrayInputStream(data.getBytes());
    System.setIn(in);
@@ -73,14 +69,27 @@ public void testGetKeyWords() throws Exception {
 public void testGetWords() throws Exception { 
 //TODO: Test goes here...
     WordLadder wl = new WordLadder();
+    Set<String> dic = new HashSet<String>();
+    File dicFile = new File(".\\src\\main\\java\\test\\dictionary.txt");
+    InputStreamReader reader = new InputStreamReader(new FileInputStream(dicFile));
+    BufferedReader br = new BufferedReader((reader));
+    String line = "";
+    line = br.readLine();
+    while(line != null){
+        line = br.readLine();
+        dic.add(line);
+    }
+    br.close();
     String word = "bee\nbug\n";
     ByteArrayInputStream in = null;
     in = new ByteArrayInputStream(word.getBytes());
     System.setIn(in);
-    wl.getWords();
-} 
+    wl.getWords(dic);
+}
 
-/** 
+
+
+    /**
 * 
 * Method: getLadder() 
 * 
@@ -89,7 +98,18 @@ public void testGetWords() throws Exception {
 public void testGetLadder() throws Exception { 
 //TODO: Test goes here..
     WordLadder wl = new WordLadder();
-    assertEquals(true, wl.getLadder());
+    Set<String> dic = new HashSet<String>();
+    File dicFile = new File(".\\src\\main\\java\\test\\dictionary.txt");
+    InputStreamReader reader = new InputStreamReader(new FileInputStream(dicFile));
+    BufferedReader br = new BufferedReader((reader));
+    String line = "";
+    line = br.readLine();
+    while(line != null){
+        line = br.readLine();
+        dic.add(line);
+    }
+    br.close();
+    assertEquals(true, wl.getLadder("bee", "bug", dic));
 } 
 
 /** 
@@ -102,7 +122,18 @@ public void testGetNeighbor() throws Exception {
 //TODO: Test goes here...
     WordLadder wl = new WordLadder();
     String str = "bee";
-    Set<String> neighbor = wl.getNeighbor(str);
+    Set<String> dic = new HashSet<String>();
+    File dicFile = new File(".\\src\\main\\java\\test\\dictionary.txt");
+    InputStreamReader reader = new InputStreamReader(new FileInputStream(dicFile));
+    BufferedReader br = new BufferedReader((reader));
+    String line = "";
+    line = br.readLine();
+    while(line != null){
+        line = br.readLine();
+        dic.add(line);
+    }
+    br.close();
+    Set<String> neighbor = wl.getNeighbor(str, dic);
     assertEquals(true, (!neighbor.contains(str)) && (neighbor.contains("beg")));
 } 
 
@@ -116,9 +147,9 @@ public void testPrintLadder() throws Exception {
 //TODO: Test goes here...
    WordLadder wl = new WordLadder();
    Stack<String> stack = new Stack<String>();
-   stack.push("1");
-   stack.push("2");
-   stack.push("3");
+   stack.push("bottom");
+   stack.push("middle");
+   stack.push("top");
 
    assertEquals(true, wl.printLadder(stack));
 
